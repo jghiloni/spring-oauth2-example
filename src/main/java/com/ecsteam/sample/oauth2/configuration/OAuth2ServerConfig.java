@@ -41,22 +41,27 @@ public class OAuth2ServerConfig {
 
 	@Configuration
 	@Order(10)
-	protected static class UiResourceConfiguration extends WebSecurityConfigurerAdapter {
+	protected static class UiResourceConfiguration extends
+			WebSecurityConfigurerAdapter {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			// @formatter:off
 			http
-				.requestMatchers().antMatchers("/service/**","/me")
+				.requestMatchers().antMatchers("/service/**","/obo/**","/me")
 			.and()
 				.authorizeRequests()
-				.antMatchers("/service/**").access("hasRole('ROLE_USER')");
+				.antMatchers("/service/**").access("hasRole('ROLE_USER')")
+			.and()
+				.authorizeRequests()
+				.antMatchers("/obo/**").access("hasRole('ROLE_USER') and hasRole('ROLE_IMPERSONATOR')");
 			// @formatter:on
 		}
 	}
 
 	@Configuration
 	@EnableResourceServer
-	protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
+	protected static class ResourceServerConfiguration extends
+			ResourceServerConfigurerAdapter {
 
 		@Override
 		public void configure(ResourceServerSecurityConfigurer resources) {
@@ -67,10 +72,11 @@ public class OAuth2ServerConfig {
 		public void configure(HttpSecurity http) throws Exception {
 			// @formatter:off
 			http
-				.requestMatchers().antMatchers("/service/**", "/oauth/users/**", "/oauth/clients/**","/me")
+				.requestMatchers().antMatchers("/service/**", "/obo/**", "/oauth/users/**", "/oauth/clients/**","/me")
 			.and()
 				.authorizeRequests()
-					.antMatchers("/me").access("#oauth2.hasScope('read')")					
+					.antMatchers("/me").access("#oauth2.hasScope('read')")
+					.antMatchers("/obo/**").access("hasRole('ROLE_IMPERSONATOR')")
 					.antMatchers("/service/**").access("#oauth2.hasScope('read') or hasRole('ROLE_USER')")
 					.regexMatchers(HttpMethod.DELETE, "/oauth/users/([^/].*?)/tokens/.*")
 						.access("#oauth2.clientHasRole('ROLE_CLIENT') and (hasRole('ROLE_USER') or #oauth2.isClient()) and #oauth2.hasScope('write')")
@@ -85,7 +91,8 @@ public class OAuth2ServerConfig {
 
 	@Configuration
 	@EnableAuthorizationServer
-	protected static class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
+	protected static class AuthorizationServerConfiguration extends
+			AuthorizationServerConfigurerAdapter {
 
 		@Autowired
 		private TokenStore tokenStore;
@@ -97,12 +104,14 @@ public class OAuth2ServerConfig {
 		@Qualifier("authenticationManagerBean")
 		private AuthenticationManager authenticationManager;
 
-		
 		@Override
-		public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+		public void configure(ClientDetailsServiceConfigurer clients)
+				throws Exception {
 
 			// @formatter:off
-			clients.inMemory().withClient("tonr")
+			clients.inMemory().withClient("joshtest").resourceIds(OAUTH_RESOURCE_ID)
+				.authorizedGrantTypes("password","authorization_code").authorities("ROLE_CLIENT").scopes("read","write","trust")
+				.secret("testsecret").autoApprove(true).and().withClient("tonr")
 			 			.resourceIds(OAUTH_RESOURCE_ID)
 			 			.authorizedGrantTypes("authorization_code", "implicit")
 			 			.authorities("ROLE_CLIENT")
@@ -147,13 +156,16 @@ public class OAuth2ServerConfig {
 		}
 
 		@Override
-		public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-			endpoints.tokenStore(tokenStore).userApprovalHandler(userApprovalHandler)
+		public void configure(AuthorizationServerEndpointsConfigurer endpoints)
+				throws Exception {
+			endpoints.tokenStore(tokenStore)
+					.userApprovalHandler(userApprovalHandler)
 					.authenticationManager(authenticationManager);
 		}
 
 		@Override
-		public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
+		public void configure(AuthorizationServerSecurityConfigurer oauthServer)
+				throws Exception {
 			oauthServer.realm("ecsoauth/client");
 		}
 
@@ -180,7 +192,8 @@ public class OAuth2ServerConfig {
 		public SampleApprovalHandler userApprovalHandler() throws Exception {
 			SampleApprovalHandler handler = new SampleApprovalHandler();
 			handler.setApprovalStore(approvalStore());
-			handler.setRequestFactory(new DefaultOAuth2RequestFactory(clientDetailsService));
+			handler.setRequestFactory(new DefaultOAuth2RequestFactory(
+					clientDetailsService));
 			handler.setClientDetailsService(clientDetailsService);
 			handler.setUseApprovalStore(true);
 			return handler;
