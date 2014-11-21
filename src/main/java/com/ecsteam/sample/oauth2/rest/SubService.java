@@ -11,14 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class SubService {
 
 	@RequestMapping("/service/sub/{pathVar}")
-	public Object baseService(@PathVariable("pathVar") String pathVar,
-			Principal principal) {
+	public Object baseService(@PathVariable("pathVar") String pathVar, Principal principal) {
 
 		StringBuilder builder = new StringBuilder("Hello, ");
-		builder.append((principal == null || principal.getName() == null) ? "Anonymous"
-				: principal.getName());
-		builder.append(", from the sub service, with path variable: ").append(
-				pathVar);
+		builder.append((principal == null || principal.getName() == null) ? "Anonymous" : principal.getName());
+		builder.append(", from the sub service, with path variable: ").append(pathVar);
 
 		System.out.println(builder.toString());
 

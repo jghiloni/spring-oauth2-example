@@ -44,7 +44,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 		return contentViewResolver;
 	}
 
-	
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 		configurer.enable();

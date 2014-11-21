@@ -21,14 +21,11 @@ import com.ecsteam.sample.oauth2.rest.model.Message;
 public class BaseService {
 
 	@RequestMapping("/service/base/{pathVar}")
-	public Object baseService(@PathVariable("pathVar") String pathVar,
-			Principal principal,
+	public Object baseService(@PathVariable("pathVar") String pathVar, Principal principal,
 			@RequestHeader("Authorization") String authorization) {
 		StringBuilder builder = new StringBuilder("Hello, ");
-		builder.append((principal == null || principal.getName() == null) ? "Anonymous"
-				: principal.getName());
-		builder.append(", from the base service, with path variable: ").append(
-				pathVar);
+		builder.append((principal == null || principal.getName() == null) ? "Anonymous" : principal.getName());
+		builder.append(", from the base service, with path variable: ").append(pathVar);
 
 		System.out.println(builder.toString());
 
@@ -39,10 +36,8 @@ public class BaseService {
 
 		HttpEntity<String> headerEntity = new HttpEntity<String>(headers);
 
-		ResponseEntity<Message> subMessageEntity = client.exchange(
-				"http://localhost:8080/service/sub/{pathVar}", HttpMethod.GET,
-				headerEntity, Message.class,
-				Collections.singletonMap("pathVar", pathVar));
+		ResponseEntity<Message> subMessageEntity = client.exchange("http://localhost:8080/service/sub/{pathVar}",
+				HttpMethod.GET, headerEntity, Message.class, Collections.singletonMap("pathVar", pathVar));
 
 		Message subMessage = subMessageEntity.getBody();
 

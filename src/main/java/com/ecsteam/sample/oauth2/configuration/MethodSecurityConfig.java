@@ -27,13 +27,13 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @Configuration
 // @EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-//public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
+// public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 public class MethodSecurityConfig {
 	@Autowired
 	private SecurityConfig securityConfig;
 
-//    @Override
-//    protected MethodSecurityExpressionHandler createExpressionHandler() {
-//        return new OAuth2MethodSecurityExpressionHandler();
-//    }
+	// @Override
+	// protected MethodSecurityExpressionHandler createExpressionHandler() {
+	// return new OAuth2MethodSecurityExpressionHandler();
+	// }
 }

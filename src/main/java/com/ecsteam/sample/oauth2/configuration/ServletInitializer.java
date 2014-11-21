@@ -27,7 +27,7 @@ public class ServletInitializer extends AbstractDispatcherServletInitializer {
 	protected WebApplicationContext createRootApplicationContext() {
 		return null;
 	}
-	
+
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		super.onStartup(servletContext);
@@ -35,5 +35,5 @@ public class ServletInitializer extends AbstractDispatcherServletInitializer {
 		filter.setContextAttribute("org.springframework.web.servlet.FrameworkServlet.CONTEXT.dispatcher");
 		servletContext.addFilter("springSecurityFilterChain", filter).addMappingForUrlPatterns(null, false, "/*");
 	}
-	
+
 }
