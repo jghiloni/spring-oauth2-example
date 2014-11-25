@@ -29,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/webjars/**", "/images/**", "/oauth/uncache_approvals", "/oauth/cache_approvals");
+		web.ignoring().antMatchers("/webjars/**", "/images/**"); //, "/oauth/uncache_approvals", "/oauth/cache_approvals");
 	}
 
 	@Override
@@ -38,21 +38,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		// @formatter:off
-		http.authorizeRequests().antMatchers("/login.jsp").permitAll().and().authorizeRequests().anyRequest()
-				.hasRole("USER")
-				.and()
-				.exceptionHandling()
-				.accessDeniedPage("/login.jsp?authorization_error=true")
-				.and()
-				// TODO: put CSRF protection back into this endpoint
-				.csrf().requireCsrfProtectionMatcher(new AntPathRequestMatcher("/oauth/authorize")).disable().logout()
-				.logoutSuccessUrl("/index.jsp").logoutUrl("/logout.do").and().httpBasic().and().formLogin()
-				.usernameParameter("j_username").passwordParameter("j_password")
-				.failureUrl("/login.jsp?authentication_error=true").loginPage("/login.jsp")
-				.loginProcessingUrl("/login.do");
-		// @formatter:on
-	}
+//	@Override
+//	protected void configure(HttpSecurity http) throws Exception {
+//		// @formatter:off
+//		http.authorizeRequests().antMatchers("/login.jsp").permitAll().and().authorizeRequests().anyRequest()
+//				.hasRole("USER")
+//				.and()
+//				.exceptionHandling()
+//				.accessDeniedPage("/login.jsp?authorization_error=true")
+//				.and()
+//				// TODO: put CSRF protection back into this endpoint
+//				.csrf().requireCsrfProtectionMatcher(new AntPathRequestMatcher("/oauth/authorize")).disable().logout()
+//				.logoutSuccessUrl("/index.jsp").logoutUrl("/logout.do").and().httpBasic().and().formLogin()
+//				.usernameParameter("j_username").passwordParameter("j_password")
+//				.failureUrl("/login.jsp?authentication_error=true").loginPage("/login.jsp")
+//				.loginProcessingUrl("/login.do");
+//		// @formatter:on
+//	}
 }

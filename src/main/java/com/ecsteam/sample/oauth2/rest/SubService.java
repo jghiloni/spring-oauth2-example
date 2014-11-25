@@ -1,13 +1,16 @@
 package com.ecsteam.sample.oauth2.rest;
 
 import java.security.Principal;
-import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
+import org.springframework.cloud.security.sso.EnableOAuth2Sso;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@EnableOAuth2Sso
 public class SubService {
 
 	@RequestMapping("/service/sub/{pathVar}")
@@ -16,9 +19,12 @@ public class SubService {
 		StringBuilder builder = new StringBuilder("Hello, ");
 		builder.append((principal == null || principal.getName() == null) ? "Anonymous" : principal.getName());
 		builder.append(", from the sub service, with path variable: ").append(pathVar);
+		
+		Map<String, Object> returnObject = new LinkedHashMap<String, Object>();
 
-		System.out.println(builder.toString());
-
-		return Collections.singletonMap("successfulExecution", Boolean.TRUE);
+		returnObject.put("message", builder.toString());
+		returnObject.put("execution", Boolean.TRUE);
+		
+		return returnObject;
 	}
 }

@@ -1,0 +1,12 @@
+oauth2:
+  client:
+    clientId: my-trusted-client-with-secret
+    clientSecret: somesecret
+    tokenUri: http://wv4-demo-login.cfapps.digitalglobe.com/oauth/token
+    authorizationUri: http://wv4-demo-login.cfapps.digitalglobe.com/oauth/authorize
+  resource:
+    userInfoUri: http://wv4-demo-uaa.cfapps.digitalglobe.com/userinfo
+    preferTokenInfo: false
+
+demoapp:
+  url: http://wv4-demo-sso.cfapps.digitalglobe.com

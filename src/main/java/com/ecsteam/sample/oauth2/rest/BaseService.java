@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.security.sso.EnableOAuth2Sso;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -15,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.ecsteam.sample.oauth2.rest.model.Message;
-
 @RestController
+@EnableOAuth2Sso
 public class BaseService {
+	
+	@Value("${demoapp.url:http://localhost:8080}")
+	private String appUrl;
 
 	@RequestMapping("/service/base/{pathVar}")
 	public Object baseService(@PathVariable("pathVar") String pathVar, Principal principal,
@@ -27,7 +31,7 @@ public class BaseService {
 		builder.append((principal == null || principal.getName() == null) ? "Anonymous" : principal.getName());
 		builder.append(", from the base service, with path variable: ").append(pathVar);
 
-		System.out.println(builder.toString());
+		//System.out.println(builder.toString());
 
 		RestTemplate client = new RestTemplate();
 
@@ -36,16 +40,21 @@ public class BaseService {
 
 		HttpEntity<String> headerEntity = new HttpEntity<String>(headers);
 
-		ResponseEntity<Message> subMessageEntity = client.exchange("http://localhost:8080/service/sub/{pathVar}",
-				HttpMethod.GET, headerEntity, Message.class, Collections.singletonMap("pathVar", pathVar));
+		Map<String, String> substitutions = new LinkedHashMap<String, String>();
+		substitutions.put("baseUrl", appUrl);
+		substitutions.put("pathVar", pathVar);
+		
+		@SuppressWarnings("rawtypes")
+		ResponseEntity<Map> subMessageEntity = client.exchange("{baseUrl}/service/sub/{pathVar}",
+				HttpMethod.GET, headerEntity, Map.class, substitutions);
 
-		Message subMessage = subMessageEntity.getBody();
+		Map<?,?> subMessage = subMessageEntity.getBody();
 
-		Map<String, Boolean> returnMaps = new LinkedHashMap<String, Boolean>(2);
+		Map<String, Object> returnMaps = new LinkedHashMap<String, Object>(3);
 
-		returnMaps.put("subExecution", subMessage.isSuccessfulExecution());
-		returnMaps.put("baseExecution", Boolean.TRUE);
-
+		returnMaps.put("execution", Boolean.TRUE);
+		returnMaps.put("message", builder.toString());
+		returnMaps.put("subService", subMessage);
 		return returnMaps;
 	}
 }
