@@ -1,6 +1,6 @@
 oauth2:
   client:
-    clientId: my-trusted-client-with-secret
+    clientId: app
     clientSecret: somesecret
     tokenUri: http://wv4-demo-login.cfapps.digitalglobe.com/oauth/token
     authorizationUri: http://wv4-demo-login.cfapps.digitalglobe.com/oauth/authorize
@@ -8,8 +8,9 @@ oauth2:
     userInfoUri: http://wv4-demo-uaa.cfapps.digitalglobe.com/userinfo
     preferTokenInfo: false
   sso:
-    loginPath: http://wv4-demo-login.cfapps.digitalglobe.com
+    loginPath: http://wv4-demo-login.cfapps.digitalglobe.com 
     logoutPath: http://wv4-demo-login.cfapps.digitalglobe.com/logout.do
 
 demoapp:
   url: http://wv4-demo-sso.cfapps.digitalglobe.com
+  loginUrl: http://wv4-demo-login.cfapps.digitalglobe.com
