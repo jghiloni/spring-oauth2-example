@@ -4,13 +4,14 @@ import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.springframework.cloud.security.sso.EnableOAuth2Sso;
+import org.springframework.cloud.security.resource.EnableOAuth2Resource;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 //@EnableOAuth2Sso
+@EnableOAuth2Resource
 public class SubService {
 
 	@RequestMapping("/service/sub/{pathVar}")

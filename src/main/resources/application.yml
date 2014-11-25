@@ -1,7 +1,7 @@
 oauth2:
   client:
     clientId: app
-    clientSecret: somesecret
+    clientSecret: appclientsecret
     tokenUri: http://wv4-demo-login.cfapps.digitalglobe.com/oauth/token
     authorizationUri: http://wv4-demo-login.cfapps.digitalglobe.com/oauth/authorize
   resource:
