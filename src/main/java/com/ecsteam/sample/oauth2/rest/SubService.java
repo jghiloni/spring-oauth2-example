@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@EnableOAuth2Sso
+//@EnableOAuth2Sso
 public class SubService {
 
 	@RequestMapping("/service/sub/{pathVar}")
